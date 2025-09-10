@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.PL", "Demo.PL\Demo.PL.csproj", "{619E4B74-38AE-4D1C-AA01-9244607D2622}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.DAL", "Demo.DAL\Demo.DAL.csproj", "{B59BD95F-1D87-4B04-A5C0-D8F61CD9B26B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.BLL", "Demo.BLL\Demo.BLL.csproj", "{FC5463EB-8028-4E15-9C85-3D0242753821}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{619E4B74-38AE-4D1C-AA01-9244607D2622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619E4B74-38AE-4D1C-AA01-9244607D2622}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619E4B74-38AE-4D1C-AA01-9244607D2622}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{619E4B74-38AE-4D1C-AA01-9244607D2622}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B59BD95F-1D87-4B04-A5C0-D8F61CD9B26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B59BD95F-1D87-4B04-A5C0-D8F61CD9B26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B59BD95F-1D87-4B04-A5C0-D8F61CD9B26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B59BD95F-1D87-4B04-A5C0-D8F61CD9B26B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC5463EB-8028-4E15-9C85-3D0242753821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC5463EB-8028-4E15-9C85-3D0242753821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC5463EB-8028-4E15-9C85-3D0242753821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC5463EB-8028-4E15-9C85-3D0242753821}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66BED7C7-1BDA-49AD-9648-ABB5198AFFCB}
+	EndGlobalSection
+EndGlobal
