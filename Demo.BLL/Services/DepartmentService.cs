@@ -48,6 +48,16 @@ public class DepartmentService(IDepartmentRepository departmentRepository) : IDe
 
     public int Update(DepartmentUpdateRequest request)
     {
-        return departmentRepository.Update(request.ToEntity());
+        var department = departmentRepository.GetById(request.Id);
+        if (department == null)
+            return 0; 
+
+        department.Name = request.Name;
+        department.Code = request.Code;
+        department.Description = request.Description;
+        department.CreatedAt = request.CreatedAt;
+        department.LastModifiedOn = DateTime.Now;
+
+        return departmentRepository.Update(department);
     }
 }

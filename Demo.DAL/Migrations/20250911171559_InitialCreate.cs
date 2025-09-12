@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Demo.DAL.Context.Migrations
+namespace Demo.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -19,7 +19,7 @@ namespace Demo.DAL.Context.Migrations
                         .Annotation("SqlServer:Identity", "10, 10"),
                     Name = table.Column<string>(type: "VarChar(50)", maxLength: 50, nullable: false),
                     Code = table.Column<string>(type: "VarChar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "VarChar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "VarChar(50)", maxLength: 50, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),

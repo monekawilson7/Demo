@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Demo.DAL.Context.Migrations
+namespace Demo.DAL.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
     partial class CompanyDBContextModelSnapshot : ModelSnapshot
@@ -46,7 +46,6 @@ namespace Demo.DAL.Context.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("VarChar");
 

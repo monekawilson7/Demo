@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Demo.DAL.Context.Migrations
+namespace Demo.DAL.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
-    [Migration("20250910135254_InitialCreate")]
+    [Migration("20250911171559_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -49,7 +49,6 @@ namespace Demo.DAL.Context.Migrations
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("VarChar");
 
