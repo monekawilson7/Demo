@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class DepartmentService(IDepartmentRepository departmentRepository) : IDepartmentService
+public class DepartmentService(IReopsitory<Department> departmentRepository) : IDepartmentService
 {
     public int Add(DepartmentRequest request)
     {

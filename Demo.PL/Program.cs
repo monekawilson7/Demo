@@ -1,12 +1,17 @@
+using Demo.DAL.Entities;
 using Demo.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDepartmentService , DepartmentService>();
 builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
+builder.Services.AddScoped<IEmployeeRepositiry, EmployeeRepositiry>();
+//builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 //builder.Services.AddScoped<CompanyDBContext>(provider => 
 //{
 //    var builder = new DbContextOptionsBuilder<CompanyDBContext>();
@@ -14,7 +19,9 @@ builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 //    return new CompanyDBContext(builder.Options);
 //});
 
-
+// IR<De> , R<D>
+//builder.Services.AddScoped<IReopsitory<Department>, BaseRepositry<Department>>();
+//builder.Services.AddScoped(typeof(IReopsitory<>), typeof(BaseRepositry<>));
 builder.Services.AddDbContext<CompanyDBContext>(options => 
 {
     //var _ = builder.Configuration["ConnectionString:DefaultConnection"];
@@ -23,6 +30,7 @@ builder.Services.AddDbContext<CompanyDBContext>(options =>
 
     options.UseSqlServer(connectionString);
 });
+builder.Services.AddAutoMapper(typeof(Demo.BLL.AssemblerReference).Assembly);
 
 var app = builder.Build();
 
