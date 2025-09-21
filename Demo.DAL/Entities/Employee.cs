@@ -10,7 +10,7 @@
     public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public DateOnly HireDate { get; set; }
-       public Gender gender { get; set; }
-    public EmployeeType employeeType { get; set; }
+       public Gender Gender { get; set; }
+    public EmployeeType EmployeeType { get; set; }
 }
 

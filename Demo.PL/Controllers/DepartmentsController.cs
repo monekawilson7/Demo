@@ -1,5 +1,5 @@
-﻿using Demo.BLL.DataTransferObjects;
-using Microsoft.AspNetCore.Mvc;
+﻿global using Demo.BLL.DataTransferObjects;
+global using Microsoft.AspNetCore.Mvc;
 
 public class DepartmentsController(IDepartmentService departmentService,
     ILogger<DepartmentsController> logger,

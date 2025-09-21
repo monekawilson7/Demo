@@ -1,13 +1,6 @@
 ﻿using Demo.BLL.DataTransferObjects;
-using Demo.DAL.Entities;
-using Demo.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-public class DepartmentService(IReopsitory<Department> departmentRepository) : IDepartmentService
+public class DepartmentService(IDepartmentRepository departmentRepository) : IDepartmentService
 {
     public int Add(DepartmentRequest request)
     {

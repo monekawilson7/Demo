@@ -27,10 +27,10 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(e => e.Salary)
             .HasColumnType("decimal(10,2)")
                .IsRequired();
-        builder.Property(e => e.gender)
+        builder.Property(e => e.Gender)
             .HasConversion(x => x.ToString(),
             s => Enum.Parse<Gender>(s));
-        builder.Property(e => e.employeeType)
+        builder.Property(e => e.EmployeeType)
            .HasConversion(x => x.ToString(),
            s => Enum.Parse<EmployeeType>(s));
     }

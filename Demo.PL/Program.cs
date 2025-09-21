@@ -1,3 +1,4 @@
+using Demo.BLL.Services;
 using Demo.DAL.Entities;
 using Demo.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDepartmentService , DepartmentService>();
 builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 builder.Services.AddScoped<IEmployeeRepositiry, EmployeeRepositiry>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 //builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 //builder.Services.AddScoped<CompanyDBContext>(provider => 
 //{
