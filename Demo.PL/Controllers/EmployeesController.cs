@@ -2,6 +2,7 @@
 using Demo.BLL.DataTransferObjects.Employee;
 using Demo.BLL.Services;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing.Text;
 
 namespace Demo.PL.Controllers;
@@ -9,21 +10,29 @@ namespace Demo.PL.Controllers;
 public class EmployeesController(IEmployeeService Service,
     ILogger<EmployeesController> logger,
     IWebHostEnvironment env,
-    IMapper mapper) : Controller
+    IMapper mapper,
+    IDepartmentService departmentService) : Controller
 {
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index(string? searchValue)
     {
-        // EmployeeService.GetAll();
-        var Employees = Service.GetAll();
-        ViewBag.Message = "Hello from Employees Index";
-        return View(Employees);
+        if (string.IsNullOrWhiteSpace(searchValue))
+            return View(Service.GetAll());
+        return View(Service.GetAll(searchValue));
+
+        //// EmployeeService.GetAll();
+        //var Employees = Service.GetAll();
+        //ViewBag.Message = "Hello from Employees Index";
+        //return View(Employees);
     }
 
     #region Create
     [HttpGet]
     public IActionResult Create()
     {
+        var departments = departmentService.GetAll();
+        var selectList = new SelectList(departments, "Id", "Name");
+        ViewBag.Departments = selectList;
         return View();
     }
     [HttpPost]
@@ -79,12 +88,22 @@ public class EmployeesController(IEmployeeService Service,
     [HttpGet]
     public IActionResult Edit(int? id)
     {
-      EmployeeDetailsResponse? Employee;
-        (bool flowControl , IActionResult value) = ValidateEmployeeIdAndFetch(id, out Employee);
-        if (!flowControl)
-            return value;
+        //EmployeeDetailsResponse? Employee;
+        //  (bool flowControl , IActionResult value) = ValidateEmployeeIdAndFetch(id, out Employee);
+        //  if (!flowControl)
+        //      return value;
 
-        return View(mapper.Map<EmployeeUpdateRequest>(Employee));
+        //  return View(mapper.Map<EmployeeUpdateRequest>(Employee));
+
+        if (!id.HasValue)
+            return BadRequest();
+        var employee = Service.GetById(id.Value);
+        if (employee == null)
+            return NotFound();
+        var departments = departmentService.GetAll();
+        var selectList = new SelectList(departments, "Id", "Name");
+        ViewBag.Departments = selectList;
+        return View(mapper.Map<EmployeeUpdateRequest>(employee));
     }
 
     [HttpPost]

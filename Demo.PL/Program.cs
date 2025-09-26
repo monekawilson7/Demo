@@ -33,6 +33,7 @@ builder.Services.AddDbContext<CompanyDBContext>(options =>
     options.UseSqlServer(connectionString);
 });
 builder.Services.AddAutoMapper(typeof(Demo.BLL.AssemblerReference).Assembly);
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

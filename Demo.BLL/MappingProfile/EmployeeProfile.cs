@@ -9,8 +9,13 @@ public class EmployeeProfile : Profile
         CreateMap<EmployeeRequest, Employee>();
         CreateMap<EmployeeUpdateRequest, Employee>();
 
-        CreateMap<Employee, EmployeeResponse>();
-        CreateMap<Employee, EmployeeDetailsResponse>();
+        CreateMap<Employee, EmployeeResponse>()
+            .ForMember(d=>d.Department, o=>o.MapFrom(s=> s.Department.Name));
+
+        CreateMap<Employee, EmployeeDetailsResponse>()
+            .ForMember(d => d.DepartmentId, o => o.MapFrom(s => s.Department.Id))
+            .ForMember(d => d.Department, o => o.MapFrom(s => s.Department.Name));
+
         CreateMap<EmployeeDetailsResponse, EmployeeUpdateRequest>();
         CreateMap<EmployeeUpdateRequest, EmployeeRequest>();
     }

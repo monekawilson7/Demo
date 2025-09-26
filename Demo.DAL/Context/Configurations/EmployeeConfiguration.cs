@@ -33,5 +33,8 @@ internal class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         builder.Property(e => e.EmployeeType)
            .HasConversion(x => x.ToString(),
            s => Enum.Parse<EmployeeType>(s));
+        builder.HasOne(e => e.Department)
+            .WithMany(d => d.Employees)
+            .HasForeignKey(e => e.DepartmentId);
     }
 }

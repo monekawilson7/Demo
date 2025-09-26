@@ -5,6 +5,7 @@ public interface IEmployeeRepositiry : IReopsitory<Employee>
 {
    IEnumerable<Employee> GetAll(String name);
     IQueryable<Employee> GetAllAsQuerable();
-    IEnumerable<TResult> GetAll<TResult>(Expression<Func<Employee, TResult>> resultSelector);
+    IEnumerable<TResult> GetAll<TResult>(Expression<Func<Employee, TResult>> resultSelector,
+        Expression<Func<Employee, bool>> predicate = null);
 
 }

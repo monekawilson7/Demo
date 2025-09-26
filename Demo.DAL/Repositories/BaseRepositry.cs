@@ -8,23 +8,20 @@ public class BaseRepositry<TEntity>(CompanyDBContext context) : IReopsitory<TEnt
     //    _dbContext = dbContext;
     //}
 
-    public virtual int Add(TEntity entity)
+    public virtual void Add(TEntity entity)
     {
         _dbSet.Add(entity);
-        return context.SaveChanges();
     }
 
-    public virtual int Delete(TEntity entity)
+    public virtual void Delete(TEntity entity)
     {
         entity.IsDeleted = true;
         _dbSet.Remove(entity);
-        return context.SaveChanges();
     }
 
-    public virtual int Update(TEntity entity)
+    public virtual void Update(TEntity entity)
     {
         _dbSet.Update(entity);
-        return context.SaveChanges();
     }
     public virtual IEnumerable<TEntity> GetAll(bool trackChanges = false)
     {

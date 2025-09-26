@@ -85,9 +85,20 @@ namespace Demo.DAL.Migrations
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(30)
                         .HasColumnType("varchar");
+
+                    b.Property<string>("EmployeeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateOnly>("HireDate")
                         .HasColumnType("date");
@@ -116,17 +127,25 @@ namespace Demo.DAL.Migrations
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<string>("employeeType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("employees");
+                });
+
+            modelBuilder.Entity("Employee", b =>
+                {
+                    b.HasOne("Demo.DAL.Entities.Department", "Department")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Demo.DAL.Entities.Department", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

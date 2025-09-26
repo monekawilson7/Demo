@@ -1,6 +1,7 @@
 ﻿using Demo.BLL.DataTransferObjects;
+using Demo.DAL.Repositories;
 
-public class DepartmentService(IDepartmentRepository departmentRepository) : IDepartmentService
+public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
 {
     public int Add(DepartmentRequest request)
     {
@@ -16,32 +17,33 @@ public class DepartmentService(IDepartmentRepository departmentRepository) : IDe
         // AutoMapper
         // Mapster
 
-        return departmentRepository.Add(department);
+         unitOfWork.Departments.Add(department);
+        return unitOfWork.SaveChanges();
     }
 
     public bool Delete(int id)
     {
 
-        var department = departmentRepository.GetById(id);
+        var department = unitOfWork.Departments.GetById(id);
         if (department is null) 
         return false;
-        var result = departmentRepository.Delete(department);
-        return result > 0;
+        unitOfWork.Departments.Delete(department);
+        return unitOfWork.SaveChanges() > 0;
     }
 
     public IEnumerable<DepartmentResponse> GetAll()
     {
-        return departmentRepository.GetAll().Select(x => x.ToResponse());
+        return unitOfWork.Departments.GetAll().Select(x => x.ToResponse());
     }
 
     public DepartmentDetailsResponse? GetById(int id)
     {
-        return departmentRepository.GetById(id)?.ToDetailsResponse();
+        return unitOfWork.Departments.GetById(id)?.ToDetailsResponse();
     }
 
     public int Update(DepartmentUpdateRequest request)
     {
-        var department = departmentRepository.GetById(request.Id);
+        var department = unitOfWork.Departments.GetById(request.Id);
         if (department == null)
             return 0; 
 
@@ -51,6 +53,7 @@ public class DepartmentService(IDepartmentRepository departmentRepository) : IDe
         department.CreatedAt = request.CreatedAt;
         department.LastModifiedOn = DateTime.Now;
 
-        return departmentRepository.Update(department);
+         unitOfWork.Departments.Update(department);
+        return unitOfWork.SaveChanges();
     }
 }

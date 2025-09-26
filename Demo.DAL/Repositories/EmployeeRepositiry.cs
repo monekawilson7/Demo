@@ -17,13 +17,27 @@ public class EmployeeRepositiry(CompanyDBContext context) : BaseRepositry<Employ
 
     }
 
-    public IEnumerable<TResult> GetAll<TResult>(Expression<Func<Employee, TResult>> resultSelector)
+    public IEnumerable<TResult> GetAll<TResult>(Expression<Func<Employee, TResult>> resultSelector,
+        Expression<Func<Employee, bool>> predicate = null)
     {
-        return _dbSet.Where(x => !x.IsDeleted).Select(resultSelector).ToList();
+        if(predicate is null)
+        {
+            return _dbSet.Where(x => !x.IsDeleted)
+            .Select(resultSelector).ToList();
+        }
+        return _dbSet.Where(x => !x.IsDeleted)
+            .Where(predicate)
+            .Select(resultSelector).ToList();
+
     }
 
     public IQueryable<Employee> GetAllAsQuerable()
     {
         return _dbSet.Where(x => !x.IsDeleted);
+    }
+    override public Employee? GetById(int id)
+    {
+        return  _dbSet.Include(e => e.Department)
+            .FirstOrDefault(e=> e.Id == id);
     }
 }
