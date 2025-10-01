@@ -1,9 +1,10 @@
 ﻿using Demo.BLL.DataTransferObjects;
 using Demo.DAL.Repositories;
+using System.Threading.Tasks;
 
 public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
 {
-    public int Add(DepartmentRequest request)
+    public async Task<int> AddAsync(DepartmentRequest request)
     {
         //Mapping 
         //Manual
@@ -18,32 +19,32 @@ public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
         // Mapster
 
          unitOfWork.Departments.Add(department);
-        return unitOfWork.SaveChanges();
+        return await unitOfWork.SaveChangesAsync();
     }
 
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
 
-        var department = unitOfWork.Departments.GetById(id);
+        var department = await unitOfWork.Departments.GetByIdAsync(id);
         if (department is null) 
         return false;
-        unitOfWork.Departments.Delete(department);
-        return unitOfWork.SaveChanges() > 0;
+        unitOfWork.Departments.Delete( department);
+        return (await unitOfWork.SaveChangesAsync()) > 0;
     }
 
-    public IEnumerable<DepartmentResponse> GetAll()
+    public async Task<IEnumerable<DepartmentResponse>> GetAllAsync()
     {
-        return unitOfWork.Departments.GetAll().Select(x => x.ToResponse());
+        return (await unitOfWork.Departments.GetAllAsync()).Select(x => x.ToResponse());
     }
 
-    public DepartmentDetailsResponse? GetById(int id)
+    public async Task<DepartmentDetailsResponse?> GetByIdAsync(int id)
     {
-        return unitOfWork.Departments.GetById(id)?.ToDetailsResponse();
+        return (await unitOfWork.Departments.GetByIdAsync(id))?.ToDetailsResponse();
     }
 
-    public int Update(DepartmentUpdateRequest request)
+    public async Task<int> UpdateAsync(DepartmentUpdateRequest request)
     {
-        var department = unitOfWork.Departments.GetById(request.Id);
+        var department = await unitOfWork.Departments.GetByIdAsync(request.Id);
         if (department == null)
             return 0; 
 
@@ -54,6 +55,6 @@ public class DepartmentService(IUnitOfWork unitOfWork) : IDepartmentService
         department.LastModifiedOn = DateTime.Now;
 
          unitOfWork.Departments.Update(department);
-        return unitOfWork.SaveChanges();
+        return await unitOfWork.SaveChangesAsync();
     }
 }

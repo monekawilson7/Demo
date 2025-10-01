@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
     public interface IDepartmentService
     {
-    DepartmentDetailsResponse? GetById (int id);
-    IEnumerable<DepartmentResponse> GetAll();
-    int Update(DepartmentUpdateRequest request);
-    bool Delete(int id);
-    int Add (DepartmentRequest request);
+    Task<DepartmentDetailsResponse?> GetByIdAsync (int id);
+    Task<IEnumerable<DepartmentResponse>> GetAllAsync();
+    Task<int> UpdateAsync(DepartmentUpdateRequest request);
+    Task<bool> DeleteAsync(int id);
+    Task<int> AddAsync(DepartmentRequest request);
 } 
      

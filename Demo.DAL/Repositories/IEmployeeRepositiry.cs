@@ -3,9 +3,9 @@
 namespace Demo.DAL.Repositories;
 public interface IEmployeeRepositiry : IReopsitory<Employee>
 {
-   IEnumerable<Employee> GetAll(String name);
+   //Task<IEnumerable<Employee>> GetAllAsync(String name);
     IQueryable<Employee> GetAllAsQuerable();
-    IEnumerable<TResult> GetAll<TResult>(Expression<Func<Employee, TResult>> resultSelector,
+    Task<IEnumerable<TResult>> GetAllAsync<TResult>(Expression<Func<Employee, TResult>> resultSelector,
         Expression<Func<Employee, bool>> predicate = null);
 
 }

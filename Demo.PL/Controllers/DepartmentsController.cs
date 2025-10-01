@@ -1,5 +1,6 @@
 ﻿global using Demo.BLL.DataTransferObjects;
 global using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 public class DepartmentsController(IDepartmentService departmentService,
     ILogger<DepartmentsController> logger,
@@ -9,7 +10,7 @@ public class DepartmentsController(IDepartmentService departmentService,
     public IActionResult Index()
     {
         // departmentService.GetAll();
-        var departments = departmentService.GetAll();
+        var departments = departmentService.GetAllAsync();
         return View(departments);
     }
 
@@ -20,14 +21,14 @@ public class DepartmentsController(IDepartmentService departmentService,
         return View();
     }
     [HttpPost]
-    public IActionResult Create(DepartmentRequest request)
+    public async Task<IActionResult> Create(DepartmentRequest request)
     {
         if (!ModelState.IsValid)
             return View(request);
 
         try
         {
-            var result = departmentService.Add(request);
+            var result = await departmentService.AddAsync(request);
             // throw new Exception("Test Error");
             if (result > 0)
                 return RedirectToAction(nameof(Index));
@@ -55,7 +56,7 @@ public class DepartmentsController(IDepartmentService departmentService,
     {
         if (!id.HasValue)
             return BadRequest();
-        var department = departmentService.GetById(id.Value);
+        var department = departmentService.GetByIdAsync(id.Value);
         if (department == null)
             return NotFound();
         return View(department);
@@ -65,18 +66,18 @@ public class DepartmentsController(IDepartmentService departmentService,
 
     #region Edit 
     [HttpGet]
-    public IActionResult Edit(int? id)
+    public async Task<IActionResult> Edit(int? id)
     {
         if (!id.HasValue)
             return BadRequest();
-        var department = departmentService.GetById(id.Value);
+        var department = await departmentService.GetByIdAsync(id.Value);
         if (department == null)
             return NotFound();
         return View(department.ToUpdateRequest(id.Value));
     }
 
     [HttpPost]
-    public IActionResult Edit([FromRoute]int? id,DepartmentUpdateRequest request)
+    public async Task<IActionResult> Edit([FromRoute]int? id,DepartmentUpdateRequest request)
     {
         if (!id.HasValue)
             return BadRequest();
@@ -86,7 +87,7 @@ public class DepartmentsController(IDepartmentService departmentService,
             return View(request);
         try
         {
-            var result = departmentService.Update(request);
+            var result = await departmentService.UpdateAsync(request);
             if (result > 0)
                 return RedirectToAction(nameof(Index));
             ModelState.AddModelError(string.Empty, "Can't Update Department now");
@@ -110,19 +111,19 @@ public class DepartmentsController(IDepartmentService departmentService,
     {
         if (!id.HasValue)
             return BadRequest();
-        var department = departmentService.GetById(id.Value);
+        var department = departmentService.GetByIdAsync(id.Value);
         if (department == null)
             return NotFound();
         return View(department);
     }
         [HttpPost, ActionName("Delete")]
-    public IActionResult ConfermDelete(int? id)
+    public async Task<IActionResult> ConfermDelete(int? id)
     {
         if (!id.HasValue)
             return BadRequest();
         try
         {
-            var isDeleted = departmentService.Delete(id.Value);
+            var isDeleted = await departmentService.DeleteAsync(id.Value);
             if (isDeleted)
                 return RedirectToAction(nameof(Index));
             ModelState.AddModelError(string.Empty, "Can't Delete Department now");
@@ -136,7 +137,7 @@ public class DepartmentsController(IDepartmentService departmentService,
             else
                 logger.LogError(ex.Message);
         }
-        var department = departmentService.GetById(id.Value);
+        var department = departmentService.GetByIdAsync(id.Value);
         if (department == null)
             return NotFound();
         return View(department);

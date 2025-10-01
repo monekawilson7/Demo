@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Demo.BLL.DataTransferObjects.Employee;
 public class EmployeeUpdateRequest
@@ -14,7 +15,7 @@ public class EmployeeUpdateRequest
     //    ErrorMessage = "Invalid Format, Example: 123-abcde-fghij")]
     public string? Address { get; set; }
     [DataType(DataType.Currency)]
-    public decimal? Salary { get; set; }
+    public decimal Salary { get; set; }
     [Display(Name = "Is Active")]
     public bool IsActive { get; set; }
     [EmailAddress]
@@ -23,8 +24,11 @@ public class EmployeeUpdateRequest
     [Phone]
     public string? PhoneNumber { get; set; }
     [Display(Name = "Hiring Date")]
-    public DateOnly HiringDate { get; set; }
+    public DateOnly? HireDate { get; set; }
     public Gender Gender { get; set; }
     public EmployeeType EmployeeType { get; set; }
     public int? DepartmentId { get; set; }
+    public IFormFile? Image { get; set; }
+    public string? ImagePath { get; set; }
+
 }

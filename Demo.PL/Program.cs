@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IDocumentService, DocumentService>();
 builder.Services.AddScoped<IDepartmentService , DepartmentService>();
 builder.Services.AddScoped<IDepartmentRepository , DepartmentRepository>();
 builder.Services.AddScoped<IEmployeeRepositiry, EmployeeRepositiry>();

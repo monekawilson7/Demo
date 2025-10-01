@@ -3,5 +3,5 @@ public interface IUnitOfWork
 {
     public IEmployeeRepositiry Employees { get;  }
     public IDepartmentRepository Departments { get;  }
-    int SaveChanges();
+    Task<int> SaveChangesAsync();
 }

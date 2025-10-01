@@ -2,32 +2,49 @@
 using AutoMapper.QueryableExtensions;
 using Demo.BLL.DataTransferObjects.Employee;
 using Demo.DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Demo.BLL.Services;
-public class EmployeeService (IUnitOfWork unitOfWork, IMapper mapper) : IEmployeeService
+public class EmployeeService (IUnitOfWork unitOfWork,
+    IMapper mapper,
+    IDocumentService documentService
+    ) : IEmployeeService
+
 {
-    public int Add(EmployeeRequest request)
+    public  async Task<int> AddAsync(EmployeeRequest request)
     {
         //s=> D
         // R => E
-
         var employee = mapper.Map<EmployeeRequest, Employee>(request);
-        return unitOfWork.SaveChanges();
+        if (request.Image is not null && request.Image.Length > 0)
+        {
+            var imageName =  documentService.UploadAsync(request.Image, "Images");
+            employee.Image = await imageName;
+        }
+        unitOfWork.Employees.Add(employee);
+        return await unitOfWork.SaveChangesAsync();
     }
 
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
 
-        var employee = unitOfWork.Employees.GetById(id);
+        var employee = await unitOfWork.Employees.GetByIdAsync(id);
         if (employee is null)
             return false;
         unitOfWork.Employees.Delete(employee);
-        return unitOfWork.SaveChanges()>0;
+        var result = await unitOfWork.SaveChangesAsync();
+        if (result > 0 && employee.Image is not null)
+        {
+            documentService.Delete(employee.Image, "Images");
+            return true;
+        }
+        return false;
     }
 
-    public IEnumerable<EmployeeResponse> GetAll()
+    public async Task<IEnumerable<EmployeeResponse>> GetAllAsync()
     {
-        var employees = unitOfWork.Employees.GetAll
+        var employees = await unitOfWork.Employees.GetAllAsync
             (e=> new EmployeeResponse { 
             Age = e.Age,
             Email = e.Email,
@@ -43,24 +60,35 @@ public class EmployeeService (IUnitOfWork unitOfWork, IMapper mapper) : IEmploye
         //return mapper.Map<IEnumerable<EmployeeResponse>>(employees);
     }
 
-    public IEnumerable<EmployeeResponse> GetAll(string searchValue)
+    public async Task<IEnumerable<EmployeeResponse>> GetAllAsync(string searchValue)
     {
-        return unitOfWork.Employees.GetAllAsQuerable()
+        return await unitOfWork.Employees.GetAllAsQuerable()
             .Where(e => e.Name.Contains(searchValue))
-            .ProjectTo<EmployeeResponse>(mapper.ConfigurationProvider).ToList();
+            .ProjectTo<EmployeeResponse>(mapper.ConfigurationProvider).ToListAsync();
     }
 
-    public EmployeeDetailsResponse? GetById(int id)
+    public async Task<EmployeeDetailsResponse?> GetByIdAsync(int id)
     {
-        var employee = unitOfWork.Employees.GetById(id);
+        var employee = await unitOfWork.Employees.GetByIdAsync(id);
         return mapper.Map<EmployeeDetailsResponse>(employee);
     }
 
-    public int Update(EmployeeUpdateRequest request)
+    public async Task<int> UpdateAsync(EmployeeUpdateRequest request)
     {
-        var employee = mapper.Map<Employee>(request);
-        unitOfWork.Employees.Update(mapper.Map<Employee>(employee));
-        return unitOfWork.SaveChanges();
+        var employee = await unitOfWork.Employees.GetByIdAsync(request.Id);
+        if (employee == null) return 0;
+        mapper.Map(request, employee);
 
+        if (request.Image is not null && request.Image.Length > 0)
+        {
+            if (!string.IsNullOrEmpty(employee.Image))
+                documentService.Delete(employee.Image, "Images");
+            var imageName = await documentService.UploadAsync(request.Image, "Images");
+            employee.Image = imageName;
+        }
+
+        unitOfWork.Employees.Update(employee);
+        return await unitOfWork.SaveChangesAsync();
     }
+
 }

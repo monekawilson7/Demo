@@ -9,10 +9,11 @@
     public bool IsActive { get; set; }
     public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public DateOnly HireDate { get; set; }
+        public DateOnly? HireDate { get; set; }
        public Gender Gender { get; set; }
     public EmployeeType EmployeeType { get; set; }
     public int? DepartmentId { get; set; }
     public Department? Department { get; set; }
+    public string? Image { get; set; }
 }
 

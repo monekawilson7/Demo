@@ -1,4 +1,6 @@
-﻿namespace Demo.DAL.Repositories;
+﻿using System.Threading.Tasks;
+
+namespace Demo.DAL.Repositories;
 public class UnitOfWork (CompanyDBContext dBContext,
     IEmployeeRepositiry employee,
     IDepartmentRepository department)
@@ -8,5 +10,5 @@ public class UnitOfWork (CompanyDBContext dBContext,
 
     public IDepartmentRepository Departments => department;
 
-    public int SaveChanges()=> dBContext.SaveChanges();
+    public async Task<int> SaveChangesAsync()=> await dBContext.SaveChangesAsync();
 }

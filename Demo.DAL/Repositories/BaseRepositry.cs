@@ -1,4 +1,7 @@
-﻿namespace Demo.DAL.Repositories;
+﻿
+using System.Threading.Tasks;
+
+namespace Demo.DAL.Repositories;
 public class BaseRepositry<TEntity>(CompanyDBContext context) : IReopsitory<TEntity> where TEntity : BaseEntitiy
 {
     protected DbSet<TEntity> _dbSet = context.Set<TEntity>();
@@ -23,16 +26,16 @@ public class BaseRepositry<TEntity>(CompanyDBContext context) : IReopsitory<TEnt
     {
         _dbSet.Update(entity);
     }
-    public virtual IEnumerable<TEntity> GetAll(bool trackChanges = false)
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync(bool trackChanges = false)
     {
         return trackChanges ?
-            _dbSet.ToList() :
-            _dbSet.AsNoTracking()
-            .ToList();
+           await _dbSet.ToListAsync() :
+           await _dbSet.AsNoTracking()
+            .ToListAsync();
     }
 
-    public virtual TEntity? GetById(int id)
+    public virtual async Task<TEntity?> GetByIdAsync(int id)
     {
-        return _dbSet.Find(id);
+        return await _dbSet.FindAsync(id);
     }
 }

@@ -4,6 +4,7 @@ using Demo.BLL.Services;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Drawing.Text;
+using System.Threading.Tasks;
 
 namespace Demo.PL.Controllers;
 
@@ -14,11 +15,11 @@ public class EmployeesController(IEmployeeService Service,
     IDepartmentService departmentService) : Controller
 {
     [HttpGet]
-    public IActionResult Index(string? searchValue)
+    public async Task<IActionResult> Index(string? searchValue)
     {
         if (string.IsNullOrWhiteSpace(searchValue))
-            return View(Service.GetAll());
-        return View(Service.GetAll(searchValue));
+            return View(await Service.GetAllAsync());
+        return View(await Service.GetAllAsync(searchValue));
 
         //// EmployeeService.GetAll();
         //var Employees = Service.GetAll();
@@ -28,22 +29,22 @@ public class EmployeesController(IEmployeeService Service,
 
     #region Create
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        var departments = departmentService.GetAll();
+        var departments = await departmentService.GetAllAsync();
         var selectList = new SelectList(departments, "Id", "Name");
         ViewBag.Departments = selectList;
         return View();
     }
     [HttpPost]
-    public IActionResult Create(EmployeeRequest request)
+    public async Task<IActionResult> Create(EmployeeRequest request)
     {
         if (!ModelState.IsValid)
             return View(request);
 
         try
         {
-            var result = Service.Add(request);
+            var result = await Service.AddAsync(request);
             // throw new Exception("Test Error");
             if (result > 0)
            
@@ -72,21 +73,28 @@ public class EmployeesController(IEmployeeService Service,
 
     #region Details
     [HttpGet]
-    public IActionResult Details(int? id)
+    public async Task<IActionResult> Details(int? id)
     {
-        EmployeeDetailsResponse? Employee;
-        (bool flowControl, IActionResult value) = ValidateEmployeeIdAndFetch(id, out Employee);
-        if (!flowControl)
-            return value;
+        //EmployeeDetailsResponse? Employee;
+        //(bool flowControl, IActionResult value) =await ValidateEmployeeIdAndFetchAsync(id, out Employee);
+        //if (!flowControl)
+        //    return value;
 
-        return View(Employee);
+        //return View(Employee);
+        var result = await ValidateEmployeeIdAndFetchAsync(id);
+        if (!result.flowControl)
+            return result.value;
+
+        return View(result.employee);
+
+
     }
 
     #endregion
 
     #region Edit 
     [HttpGet]
-    public IActionResult Edit(int? id)
+    public async Task<IActionResult> Edit(int? id)
     {
         //EmployeeDetailsResponse? Employee;
         //  (bool flowControl , IActionResult value) = ValidateEmployeeIdAndFetch(id, out Employee);
@@ -97,17 +105,17 @@ public class EmployeesController(IEmployeeService Service,
 
         if (!id.HasValue)
             return BadRequest();
-        var employee = Service.GetById(id.Value);
+        var employee = await Service.GetByIdAsync(id.Value);
         if (employee == null)
             return NotFound();
-        var departments = departmentService.GetAll();
+        var departments = await departmentService.GetAllAsync();
         var selectList = new SelectList(departments, "Id", "Name");
         ViewBag.Departments = selectList;
         return View(mapper.Map<EmployeeUpdateRequest>(employee));
     }
 
     [HttpPost]
-    public IActionResult Edit([FromRoute] int? id, EmployeeUpdateRequest request)
+    public async Task<IActionResult> Edit([FromRoute] int? id, EmployeeUpdateRequest request)
     {
         if (!id.HasValue)
             return BadRequest();
@@ -117,7 +125,7 @@ public class EmployeesController(IEmployeeService Service,
             return View(request);
         try
         {
-            var result = Service.Update(request);
+            var result = await Service.UpdateAsync(request);
             if (result > 0)
                 return RedirectToAction(nameof(Index));
             ModelState.AddModelError(string.Empty, "Can't Update Employee now");
@@ -137,22 +145,28 @@ public class EmployeesController(IEmployeeService Service,
 
     #region Delete
     [HttpGet]
-    public IActionResult Delete(int? id)
+    public async Task<IActionResult> Delete(int? id)
     {
-        EmployeeDetailsResponse? Employee;
-        (bool flowControl, IActionResult value) = ValidateEmployeeIdAndFetch(id, out Employee);
-        if (!flowControl)
-            return value;
-        return View(Employee);
+        //EmployeeDetailsResponse? Employee;
+        //(bool flowControl, IActionResult value) = await ValidateEmployeeIdAndFetchAsync(id, out Employee);
+        //if (!flowControl)
+        //    return value;
+        //return View(Employee);
+        var result = await ValidateEmployeeIdAndFetchAsync(id);
+        if (!result.flowControl)
+            return result.value;
+
+        return View(result.employee);
+
     }
     [HttpPost, ActionName("Delete")]
-    public IActionResult ConfermDelete(int? id)
+    public async Task<IActionResult> ConfermDelete(int? id)
     {
         if (!id.HasValue)
             return BadRequest();
         try
         {
-            var isDeleted = Service.Delete(id.Value);
+            var isDeleted = await Service.DeleteAsync(id.Value);
             if (isDeleted)
                 return RedirectToAction(nameof(Index));
             ModelState.AddModelError(string.Empty, "Can't Delete Employee now");
@@ -166,7 +180,7 @@ public class EmployeesController(IEmployeeService Service,
             else
                 logger.LogError(ex.Message);
         }
-        var Employee = Service.GetById(id.Value);
+        var Employee = await Service.GetByIdAsync(id.Value);
         if (Employee == null)
             return NotFound();
         return View(Employee);
@@ -175,18 +189,18 @@ public class EmployeesController(IEmployeeService Service,
     #endregion
 
     //Helpers 
-    private (bool flowControl, IActionResult value) ValidateEmployeeIdAndFetch(int? id, out EmployeeDetailsResponse? employee)
+    private async Task<(bool flowControl, IActionResult? value, EmployeeDetailsResponse? employee)>
+     ValidateEmployeeIdAndFetchAsync(int? id)
     {
-
         if (!id.HasValue)
-        {
-            employee = default;
-            return (flowControl: false, value: BadRequest());
-        }
-        employee = Service.GetById(id.Value);
+            return (false, BadRequest(), null);
+
+        var employee = await Service.GetByIdAsync(id.Value);
         if (employee == null)
-            return (flowControl: false, value: NotFound());
-        return (flowControl: true, value: null);
+            return (false, NotFound(), null);
+
+        return (true, null, employee);
     }
-    
+
+
 }
