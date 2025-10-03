@@ -64,8 +64,10 @@ public class EmployeeService (IUnitOfWork unitOfWork,
     {
         return await unitOfWork.Employees.GetAllAsQuerable()
             .Where(e => e.Name.Contains(searchValue))
-            .ProjectTo<EmployeeResponse>(mapper.ConfigurationProvider).ToListAsync();
+            .ProjectTo<EmployeeResponse>(mapper.ConfigurationProvider)
+            .ToListAsync();
     }
+
 
     public async Task<EmployeeDetailsResponse?> GetByIdAsync(int id)
     {

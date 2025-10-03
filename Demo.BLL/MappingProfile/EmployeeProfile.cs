@@ -16,7 +16,9 @@ public class EmployeeProfile : Profile
             .ForMember(d => d.DepartmentId, o => o.MapFrom(s => s.Department.Id))
             .ForMember(d => d.Department, o => o.MapFrom(s => s.Department.Name));
 
-        CreateMap<EmployeeDetailsResponse, EmployeeUpdateRequest>();
+        CreateMap<EmployeeDetailsResponse, EmployeeUpdateRequest>()
+            .ForMember(dest => dest.Image, opt => opt.Ignore());
+
         CreateMap<EmployeeUpdateRequest, EmployeeRequest>();
     }
 }
