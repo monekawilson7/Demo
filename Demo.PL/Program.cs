@@ -1,6 +1,7 @@
 using Demo.BLL.Services;
 using Demo.DAL.Entities;
 using Demo.DAL.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -35,6 +36,15 @@ builder.Services.AddDbContext<CompanyDBContext>(options =>
 });
 builder.Services.AddAutoMapper(typeof(Demo.BLL.AssemblerReference).Assembly);
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddIdentity<ApplicationUsers, IdentityRole>(config=>
+{
+    config.Password.RequireNonAlphanumeric = true;
+    config.Password.RequiredUniqueChars=3;
+    config.Password.RequiredLength = 8;
+})
+    .AddEntityFrameworkStores<CompanyDBContext>();
+//builder.Services.AddIdentityCore<ApplicationUsers>();
 
 var app = builder.Build();
 
